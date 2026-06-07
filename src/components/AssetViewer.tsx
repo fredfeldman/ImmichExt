@@ -11,7 +11,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import type { TimelineAsset } from './AssetGrid'
 import { useKeyboard } from '../hooks/useKeyboard'
-import { getAssetOriginalUrl, getAssetVideoPlaybackUrl, getSharedLinkUrl } from '../api/client'
+import {
+  getAssetOriginalUrl,
+  getAssetThumbnailUrl,
+  getAssetVideoPlaybackUrl,
+  getSharedLinkUrl,
+} from '../api/client'
 import { CommentPanel } from './CommentPanel'
 
 type AssetViewerProps = {
@@ -34,6 +39,24 @@ const clampIndex = (value: number, max: number): number => {
   }
 
   return value
+}
+
+const browserSupportedImageMimes = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'image/bmp',
+  'image/avif',
+  'image/svg+xml',
+])
+
+const canRenderImageDirectly = (mimeType: string | null | undefined): boolean => {
+  if (!mimeType) {
+    return false
+  }
+
+  return browserSupportedImageMimes.has(mimeType.toLowerCase())
 }
 
 export const AssetViewer = ({ assets, initialIndex, onClose }: AssetViewerProps) => {
@@ -312,6 +335,21 @@ export const AssetViewer = ({ assets, initialIndex, onClose }: AssetViewerProps)
     }
   }, [assetQuery.data])
 
+  const imageSource = useMemo(() => {
+    if (!activeAsset?.isImage) {
+      return null
+    }
+
+    const mimeType = assetQuery.data?.originalMimeType
+
+    if (canRenderImageDirectly(mimeType)) {
+      return getAssetOriginalUrl(activeAsset.id)
+    }
+
+    // RAW and other unsupported formats (for example CR3) use Immich preview rendering.
+    return getAssetThumbnailUrl(activeAsset.id, 'preview')
+  }, [activeAsset?.id, activeAsset?.isImage, assetQuery.data?.originalMimeType])
+
   if (!activeAsset) {
     return null
   }
@@ -348,7 +386,7 @@ export const AssetViewer = ({ assets, initialIndex, onClose }: AssetViewerProps)
         <div className="mx-auto flex h-full w-full max-w-5xl items-center justify-center rounded-xl bg-black/35 p-6">
           {activeAsset.isImage ? (
             <img
-              src={getAssetOriginalUrl(activeAsset.id)}
+              src={imageSource ?? getAssetThumbnailUrl(activeAsset.id, 'preview')}
               alt=""
               className="max-h-full max-w-full object-contain transition"
               style={{ transform: `scale(${zoom})` }}

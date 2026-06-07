@@ -1,4 +1,6 @@
-# Devloper Guide: ImmichExt
+# Developer Guide: ImmichExt
+
+**Version:** 1.0.0 | **Release Date:** June 7, 2026
 
 ## 1. Purpose
 

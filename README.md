@@ -1,13 +1,16 @@
 # ImmichExt
 
+**Version:** 1.0.0 | **Release Date:** June 7, 2026
+
 ImmichExt is an alternative React frontend for Immich, focused on faster daily workflows, especially comments, bulk actions, keyboard navigation, and family sharing.
 
 This project uses the official Immich REST API via @immich/sdk.
 
 ## Documentation
 
-- Developer Guide: [DevloperGuide_ImmichExt.md](DevloperGuide_ImmichExt.md)
+- Developer Guide: [DeveloperGuide_ImmichExt.md](DeveloperGuide_ImmichExt.md)
 - User Guide: [UserGuide_ImmichExt.md](UserGuide_ImmichExt.md)
+- Release Notes: [ReleaseNotes.v1.0.0.md](ReleaseNotes.v1.0.0.md)
 
 ## Highlights
 

@@ -2,7 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-const immichServerUrl = process.env.VITE_IMMICH_URL ?? 'http://localhost:2283'
+const configuredImmichUrl = process.env.VITE_IMMICH_URL?.trim()
+const immichServerUrl = configuredImmichUrl || 'http://192.168.50.18:2283'
 const proxyTarget = immichServerUrl.replace(/\/api\/?$/, '')
 
 // https://vite.dev/config/
